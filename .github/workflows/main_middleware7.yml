@@ -16,44 +16,34 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     
-    # 2. Get the latest commit hash and the latest tag (if any)
+    # 2. Get version information
     - name: Get version information
       id: version_info
       run: |
-        # Get the current commit hash (shortened version)
         commit_hash=$(git rev-parse --short HEAD)
-
-        # Get the latest Git tag (if any)
         tag=$(git describe --tags --abbrev=0 || echo "NoTag")
-
-        # Set version based on whether there's a tag or not
         if [ "$tag" != "NoTag" ]; then
           version=$tag
         else
           version="dev-${commit_hash}"
         fi
-
         echo "VERSION=$version" >> $GITHUB_ENV
         echo "Version: $version"
     
-    # 3. Update the version in package.json
+    # 3. Update package version
     - name: Update package version
       run: |
-        # Replace the version in package.json dynamically
         jq ".version = \"${{ env.VERSION }}\"" package.json > temp.json && mv temp.json package.json
 
-    # 4. Commit the updated version to the repository
-    - name: Commit version update
+    # 4. Set up Git with the correct user
+    - name: Set up Git user
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    
+    # 5. Push changes using the personal access token (GH_TOKEN)
+    - name: Push changes
+      run: |
         git add package.json
         git commit -m "Update version to ${{ env.VERSION }}"
-        git push
-
-    # 5. Optionally, create a new tag based on the version (optional step)
-    - name: Create a new tag
-      if: startsWith(env.VERSION, 'v')
-      run: |
-        git tag ${{ env.VERSION }}
-        git push origin ${{ env.VERSION }}
+        git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
