@@ -7,6 +7,9 @@ on:
     tags:
       - 'v*'        # Trigger when new version tags are pushed (optional)
 
+permissions:
+  contents: write  # Ensure that GitHub Actions has write permissions
+
 jobs:
   versioning:
     runs-on: ubuntu-latest
@@ -41,7 +44,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
     
-    # 5. Push changes (using GitHub Actions' default token)
+    # 5. Push changes (using the default GITHUB_TOKEN for authentication)
     - name: Push changes
       run: |
         git add package.json
