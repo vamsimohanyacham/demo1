@@ -3,30 +3,28 @@ name: Publish Vite Package
 on:
   push:
     branches:
-      - main
+      - main  # Only run on push to the main branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2  # Checkout the code from the repository
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v2  # Set up the Node.js environment
       with:
-        node-version: '16'  # Specify Node.js version
+        node-version: '16'  # Specify the Node.js version to use
 
     - name: Install dependencies
-      run: npm install
+      run: npm install  # Install all dependencies from package.json
 
-    - name: Build the Vite project
-      run: npm run build
-
-    - name: Publish to npm
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Set npm token for authentication
+    - name: Update version in package.json
       run: |
-        echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-        npm publish --access public
+        # Bump the version here if needed (this will increment the version automatically)
+        npm version patch --no-git-tag-version  # Increment patch version, change to minor or major as needed
+        cat package.json  # Output the updated version to confirm
+
+    - name: Build the V
