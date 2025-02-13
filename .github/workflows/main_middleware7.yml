@@ -3,38 +3,28 @@ name: Publish Vite Package
 on:
   push:
     branches:
-      - main   # You can specify any branch you want to trigger this on
-    # Optional: Trigger this on tags (e.g., v1.0.0, v1.1.0)
-    # tags:
-    #   - 'v*'
+      - main  # Trigger on a push to the 'main' branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu image for this job
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2  # Checkout your code
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'  # Adjust this based on your Node.js version
+        node-version: '16'  # Specify the version of Node.js (and npm) to use
 
     - name: Install dependencies
-      run: npm install
+      run: npm install  # Run npm install to install dependencies
 
-    - name: Build Vite project
-      run: npm run build
-
-    - name: Set version based on commit hash
-      run: |
-        VERSION=$(git rev-parse --short HEAD)  # Use commit hash as version
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    - name: Build the Vite project
+      run: npm run build  # Run the Vite build process
 
     - name: Publish to GitHub Packages
       run: |
         echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-        npm publish --access public
-      env:
-        VERSION: ${{ env.VERSION }}
+        npm publish --access public  # Publish your package to GitHub Packages
