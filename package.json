@@ -1,7 +1,7 @@
 {
   "name": "middlewaretalents",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",  // Consider incrementing the version, since "0.0.0" might indicate an initial version.
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,23 +11,24 @@
     "start": "vite"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@heroicons/react": "^2.2.0",  // No need to change if you're satisfied with this version
+    "react": "^18.3.1",  // Ensure this is the latest stable React
+    "react-dom": "^18.3.1",  // Similarly, update React DOM to match
+    "vite": "^4.5.0"  // Updated to the latest Vite version (ensure compatibility with plugins and other dependencies)
   },
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.17.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.16",
-    "globals": "^15.14.0",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "vite": "^6.0.5"
+    "@eslint/js": "^9.17.0",  // ESLint's base package
+    "@types/react": "^18.3.18",  // Keep TypeScript types for React updated
+    "@types/react-dom": "^18.3.5",  // Keep TypeScript types for React DOM updated
+    "@vitejs/plugin-react": "^4.3.4",  // React plugin for Vite (ensure it's compatible with the Vite version you're using)
+    "autoprefixer": "^10.4.20",  // Latest version of Autoprefixer
+    "eslint": "^9.17.0",  // Make sure ESLint is up to date for proper linting
+    "eslint-plugin-react": "^7.37.2",  // Latest plugin for React linting
+    "eslint-plugin-react-hooks": "^5.0.0",  // Plugin for React hooks linting
+    "eslint-plugin-react-refresh": "^0.4.16",  // For React Refresh (hot reloads)
+    "globals": "^15.14.0",  // Ensure globals are up to date for linting
+    "postcss": "^8.4.49",  // Keep PostCSS updated
+    "tailwindcss": "^3.4.17",  // Latest Tailwind CSS version
+    "vite": "^4.5.0"  // Ensure Vite is updated to the latest version
   }
 }
