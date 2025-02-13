@@ -1,6 +1,6 @@
 {
   "name": "middlewaretalents",
-  "version": "dev-ae7bd53",
+  "version": "dev-b3445e3",
   "type": "module",
   "scripts": {
     "dev": "vite",
