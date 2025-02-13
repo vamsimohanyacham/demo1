@@ -6,7 +6,7 @@ on:
       - main        # Trigger for commits to the 'main' branch
     tags:
       - 'v*'        # Trigger when new version tags are pushed (optional)
-      
+
 jobs:
   versioning:
     runs-on: ubuntu-latest
@@ -41,9 +41,9 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
     
-    # 5. Push changes using the personal access token (GH_TOKEN)
+    # 5. Push changes (using GitHub Actions' default token)
     - name: Push changes
       run: |
         git add package.json
         git commit -m "Update version to ${{ env.VERSION }}"
-        git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+        git push
