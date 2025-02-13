@@ -1,30 +1,59 @@
-name: Publish Vite Package
+name: Versioning Workflow
 
 on:
   push:
     branches:
-      - main  # Only run on push to the main branch
-
+      - main        # Trigger for commits to the 'main' branch
+    tags:
+      - 'v*'        # Trigger when new version tags are pushed (optional)
+      
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+  versioning:
+    runs-on: ubuntu-latest
 
     steps:
+    # 1. Checkout the code
     - name: Checkout code
-      uses: actions/checkout@v2  # Checkout the code from the repository
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2  # Set up the Node.js environment
-      with:
-        node-version: '16'  # Specify the Node.js version to use
-
-    - name: Install dependencies
-      run: npm install  # Install all dependencies from package.json
-
-    - name: Update version in package.json
+      uses: actions/checkout@v2
+    
+    # 2. Get the latest commit hash and the latest tag (if any)
+    - name: Get version information
+      id: version_info
       run: |
-        # Bump the version here if needed (this will increment the version automatically)
-        npm version patch --no-git-tag-version  # Increment patch version, change to minor or major as needed
-        cat package.json  # Output the updated version to confirm
+        # Get the current commit hash (shortened version)
+        commit_hash=$(git rev-parse --short HEAD)
 
-    - name: Build the V
+        # Get the latest Git tag (if any)
+        tag=$(git describe --tags --abbrev=0 || echo "NoTag")
+
+        # Set version based on whether there's a tag or not
+        if [ "$tag" != "NoTag" ]; then
+          version=$tag
+        else
+          version="dev-${commit_hash}"
+        fi
+
+        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "Version: $version"
+    
+    # 3. Update the version in package.json
+    - name: Update package version
+      run: |
+        # Replace the version in package.json dynamically
+        jq ".version = \"${{ env.VERSION }}\"" package.json > temp.json && mv temp.json package.json
+
+    # 4. Commit the updated version to the repository
+    - name: Commit version update
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add package.json
+        git commit -m "Update version to ${{ env.VERSION }}"
+        git push
+
+    # 5. Optionally, create a new tag based on the version (optional step)
+    - name: Create a new tag
+      if: startsWith(env.VERSION, 'v')
+      run: |
+        git tag ${{ env.VERSION }}
+        git push origin ${{ env.VERSION }}
